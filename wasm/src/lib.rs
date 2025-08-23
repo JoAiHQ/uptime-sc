@@ -6,9 +6,9 @@
 
 // Init:                                 1
 // Upgrade:                              1
-// Endpoints:                            1
+// Endpoints:                            5
 // Async Callback (empty):               1
-// Total number of exported functions:   4
+// Total number of exported functions:   8
 
 #![no_std]
 
@@ -21,6 +21,10 @@ multiversx_sc_wasm_adapter::endpoints! {
         init => init
         upgrade => upgrade
         heartbeat => heartbeat_endpoint
+        getLifetimeInfo => get_lifetime_info
+        getHeartbeatCount => heartbeat_count
+        getLastHeartbeatTimestamp => last_heartbeat_timestamp
+        getLifetimeCount => lifetime_count
     )
 }
 
