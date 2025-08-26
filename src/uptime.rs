@@ -31,13 +31,19 @@ pub trait Uptime {
     }
 
     #[view(getLifetimeInfo)]
-    fn get_lifetime_info(&self, agent: &ManagedAddress) -> MultiValue3<u64, u64, u64> {
+    fn get_lifetime_info(&self, agent: &ManagedAddress) -> MultiValue4<u64, u64, u64, u64> {
+        let total_heartbeats = self.heartbeat_count(agent).get();
         let lifetime_count = self.lifetime_count(agent).get();
         let lifetime_seconds = lifetime_count * HEARTBEAT_INTERVAL;
         let time_since_last = self.get_time_since_last_heartbeat(agent);
-        let total_heartbeats = self.heartbeat_count(agent).get();
 
-        (lifetime_seconds, time_since_last, total_heartbeats).into()
+        let time_remaining = if time_since_last >= MAX_ALLOWED_DELAY {
+            0
+        } else {
+            MAX_ALLOWED_DELAY - time_since_last
+        };
+
+        (total_heartbeats, lifetime_seconds, time_since_last, time_remaining).into()
     }
 
     fn get_time_since_last_heartbeat(&self, agent: &ManagedAddress) -> u64 {
