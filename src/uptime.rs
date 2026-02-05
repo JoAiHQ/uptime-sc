@@ -28,6 +28,7 @@ pub trait Uptime {
 
         self.last_heartbeat_timestamp(&caller).set(&current_timestamp);
         self.heartbeat_count(&caller).update(|current| *current += 1);
+        self.total_heartbeats_global().update(|current| *current += 1);
     }
 
     #[view(getLifetimeInfo)]
@@ -65,4 +66,8 @@ pub trait Uptime {
     #[view(getLifetimeCount)]
     #[storage_mapper("lifetime_count")]
     fn lifetime_count(&self, agent: &ManagedAddress) -> SingleValueMapper<u64>;
+
+    #[view(getTotalHeartbeats)]
+    #[storage_mapper("total_heartbeats_global")]
+    fn total_heartbeats_global(&self) -> SingleValueMapper<u64>;
 }
